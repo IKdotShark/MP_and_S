@@ -2,11 +2,7 @@ import datetime
 import re
 
 
-def card_check():
-    card_number = input("Введите номер карты: ")
-    expiry_date = input("Введите срок действия карты (ММ/ГГ): ")
-    cvc = input("Введите CVC/CVV код: ")
-
+def card_check(card_number, expiry_date, cvc):
     # Проверка по алгоритму Луна
     def luhn_algorithm(card_number):
         card_digits = [int(digit) for digit in card_number.replace(" ", "")]
@@ -79,23 +75,37 @@ def payment_check():
 
 
 def main():
-    cardcheck = card_check()
+    # Запрос данных для проверки карты
+    card_number = input("Введите номер карты: ")
+    expiry_date = input("Введите срок действия карты (ММ/ГГ): ")
+    cvc = input("Введите CVC/CVV код: ")
+
+    cardcheck = card_check(card_number, expiry_date, cvc)
+    
     if cardcheck:
         bankanswer = bank_answer()
+    
     while not (cardcheck) or not (bankanswer):
         print("")
-        cardcheck = card_check()
+        # Повторный ввод данных при ошибке
+        card_number = input("Введите номер карты: ")
+        expiry_date = input("Введите срок действия карты (ММ/ГГ): ")
+        cvc = input("Введите CVC/CVV код: ")
+
+        cardcheck = card_check(card_number, expiry_date, cvc)
         if cardcheck:
             bankanswer = bank_answer()
+
     paymentcheck = payment_check()
     if paymentcheck:
         bankanswer = bank_answer()
+    
     while not (paymentcheck) or not (bankanswer):
         print("")
         paymentcheck = payment_check()
         if paymentcheck:
             bankanswer = bank_answer()
-    print("Балдеж")
+    print("Операция прошла успешно")
 
 
 if __name__ == "__main__":
