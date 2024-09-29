@@ -1,7 +1,6 @@
 import datetime
 import re
 
-
 def card_check(card_number, expiry_date, cvc):
     # Проверка по алгоритму Луна
     def luhn_algorithm(card_number):
@@ -30,83 +29,55 @@ def card_check(card_number, expiry_date, cvc):
 
     # Проверка всех условий
     if not luhn_algorithm(card_number):
-        print("Номер карты недействителен по алгоритму Луна.")
-        return False
+        return "Номер карты недействителен по алгоритму Луна."
 
     if not validate_expiry_date(expiry_date):
-        print("Срок действия карты недействителен.")
-        return False
+        return "Срок действия карты недействителен."
 
     if not validate_cvc(cvc):
-        print("CVC/CVV код недействителен.")
-        return False
+        return "CVC/CVV код недействителен."
 
     return True
 
-
-def bank_answer():
-    bank_confirm = input("Введите ответ банка (Yes/No): ").lower()
+def bank_answer(bank_confirm):
+    bank_confirm = bank_confirm.lower()
     if re.match(r'^(y(es)?)$', bank_confirm):
         return True
     elif re.match(r'^(n(o)?)$', bank_confirm):
-        print("Отрицательный ответ банка")
-        return False
+        return "Отрицательный ответ банка"
     else:
-        print("Неверный ответ банка")
-        return False
+        return "Неверный ответ банка"
 
-
-def payment_check():
-    card_balance = float(input("Введите баланс карты: "))
-    payment = float(input("Введите стоимость покупки: "))
-    if card_balance >= payment:
-        payment_check_confirm = input("Подтвердите покупку (Введите Yes/No): ").lower()
+def payment_check(card_balance, payment, payment_check_confirm):
+    if float(card_balance) >= float(payment):
+        payment_check_confirm = payment_check_confirm.lower()
         if re.match(r'^(y(es)?)$', payment_check_confirm):
             return True
         elif re.match(r'^(n(o)?)$', payment_check_confirm):
-            print("Отрицательный ответ пользователя")
-            return False
+            return "Отрицательный ответ пользователя"
         else:
-            print("Неверный ответ пользователя")
-            return False
+            return "Неверный ответ пользователя"
     else:
-        print("Стоимость покупки больше баланса")
-        return False
-
+        return "Стоимость покупки больше баланса"
 
 def main():
-    # Запрос данных для проверки карты
-    card_number = input("Введите номер карты: ")
-    expiry_date = input("Введите срок действия карты (ММ/ГГ): ")
-    cvc = input("Введите CVC/CVV код: ")
-
-    cardcheck = card_check(card_number, expiry_date, cvc)
-    
+    cardcheck = card_check()
     if cardcheck:
         bankanswer = bank_answer()
-    
     while not (cardcheck) or not (bankanswer):
         print("")
-        # Повторный ввод данных при ошибке
-        card_number = input("Введите номер карты: ")
-        expiry_date = input("Введите срок действия карты (ММ/ГГ): ")
-        cvc = input("Введите CVC/CVV код: ")
-
-        cardcheck = card_check(card_number, expiry_date, cvc)
+        cardcheck = card_check()
         if cardcheck:
             bankanswer = bank_answer()
-
     paymentcheck = payment_check()
     if paymentcheck:
         bankanswer = bank_answer()
-    
     while not (paymentcheck) or not (bankanswer):
         print("")
         paymentcheck = payment_check()
         if paymentcheck:
             bankanswer = bank_answer()
-    print("Операция прошла успешно")
-
+    print("Балдеж")
 
 if __name__ == "__main__":
     main()
