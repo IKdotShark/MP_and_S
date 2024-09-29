@@ -1,8 +1,8 @@
 import datetime
+import re
 
 
 def card_check():
-
     card_number = input("Введите номер карты: ")
     expiry_date = input("Введите срок действия карты (ММ/ГГ): ")
     cvc = input("Введите CVC/CVV код: ")
@@ -49,10 +49,10 @@ def card_check():
 
 
 def bank_answer():
-    bank_confirm = input("Введите ответ банка (Yes/No): ")
-    if (bank_confirm == "Yes" or bank_confirm == "Y" or bank_confirm == "y"):
+    bank_confirm = input("Введите ответ банка (Yes/No): ").lower()
+    if re.match(r'^(y(es)?)$', bank_confirm):
         return True
-    elif (bank_confirm == "No" or bank_confirm == "N" or bank_confirm == "n"):
+    elif re.match(r'^(n(o)?)$', bank_confirm):
         print("Отрицательный ответ банка")
         return False
     else:
@@ -61,13 +61,13 @@ def bank_answer():
 
 
 def payment_check():
-    card_balance = input("Введите баланс карты: ")
-    payment = input("Введите стоимость покупки: ")
-    if (card_balance >= payment):
-        payment_check_confirm = input("Подтвердите покупку (Введите Yes/No): ")
-        if (payment_check_confirm == "Yes" or payment_check_confirm == "Y" or payment_check_confirm == "y"):
+    card_balance = float(input("Введите баланс карты: "))
+    payment = float(input("Введите стоимость покупки: "))
+    if card_balance >= payment:
+        payment_check_confirm = input("Подтвердите покупку (Введите Yes/No): ").lower()
+        if re.match(r'^(y(es)?)$', payment_check_confirm):
             return True
-        elif (payment_check_confirm == "No" or payment_check_confirm == "N" or payment_check_confirm == "n"):
+        elif re.match(r'^(n(o)?)$', payment_check_confirm):
             print("Отрицательный ответ пользователя")
             return False
         else:
@@ -82,7 +82,7 @@ def main():
     cardcheck = card_check()
     if cardcheck:
         bankanswer = bank_answer()
-    while not(cardcheck) or not(bankanswer):
+    while not (cardcheck) or not (bankanswer):
         print("")
         cardcheck = card_check()
         if cardcheck:
@@ -90,13 +90,12 @@ def main():
     paymentcheck = payment_check()
     if paymentcheck:
         bankanswer = bank_answer()
-    while not(paymentcheck) or not(bankanswer):
+    while not (paymentcheck) or not (bankanswer):
         print("")
         paymentcheck = payment_check()
         if paymentcheck:
             bankanswer = bank_answer()
     print("Балдеж")
-
 
 
 if __name__ == "__main__":
