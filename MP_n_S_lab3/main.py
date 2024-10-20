@@ -1,4 +1,4 @@
-# main.py
+import math
 from lcg_module import LinearCongruentialGenerator
 from random_module import BuiltInRandomGenerator
 from visualiser import FrequencyTestVisualizer
@@ -35,14 +35,16 @@ class RandomAnalyzer:
         # Математическое ожидание и дисперсия для ЛКГ
         lcg_mean = lcg_sum / num_samples
         lcg_variance = (lcg_squared_sum / num_samples) - (lcg_mean ** 2)
+        lcg_standard_deviation = math.sqrt(lcg_variance)
 
         # Математическое ожидание и дисперсия для встроенного генератора
         random_mean = random_sum / num_samples
         random_variance = (random_squared_sum / num_samples) - (random_mean ** 2)
+        random_standard_deviation = math.sqrt(random_variance)
 
         # Результаты
-        print(f"ЛКГ: Математическое ожидание = {lcg_mean}, Дисперсия = {lcg_variance}")
-        print(f"Random: Математическое ожидание = {random_mean}, Дисперсия = {random_variance}")
+        print(f"ЛКГ: Математическое ожидание = {lcg_mean}, Дисперсия = {lcg_variance}, Среднеквадратичное отклонение = {lcg_standard_deviation}")
+        print(f"Random: Математическое ожидание = {random_mean}, Дисперсия = {random_variance}, Среднеквадратичное отклонение = {random_standard_deviation}")
 
         # Сравнение попадания в интервалы
         print(f"ЛКГ: Процент значений < 0.5 = {(lcg_less_than_half / num_samples) * 100}%")
@@ -80,9 +82,9 @@ class PeriodAnalyzer:
 # Основная программа
 def main():
     # Параметры ЛКГ
-    a = 1664525  # Множитель
-    c = 1013904223  # Приращение
-    m = 2 ** 32
+    a = 1673625  # Множитель
+    c = 1013910000  # Приращение c = 1013910000
+    m = 2 ** 34 # Рекомендуемое >= 2 ** 32
     seed = 12345  # Начальное значение
 
     lcg = LinearCongruentialGenerator(a, c, m, seed)
@@ -102,6 +104,10 @@ def main():
         period_analyzer = PeriodAnalyzer(lcg)
         period = period_analyzer.determine_period(1000000)  # Максимум 1 миллион итераций
         print(f"Длина периода генератора: {period}")
+        # for tests
+        # математическое ожидание должно быть ~0.5
+        # дисперсия ~ 0.0833
+        # среднеквадратическое отклонение ~0,2887
     elif choice == 3:
         visualizer = FrequencyTestVisualizer(lcg, built_in_random)
         visualizer.visualize_frequency_test(100000)  # Число выборок для визуализации

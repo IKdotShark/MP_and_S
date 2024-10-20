@@ -1,5 +1,3 @@
-# lcg_module.py
-
 class LinearCongruentialGenerator:
     def __init__(self, a, c, m, seed):
         self.a = a  # Множитель

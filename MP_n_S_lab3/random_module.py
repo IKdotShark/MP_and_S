@@ -1,4 +1,3 @@
-# random_module.py
 import random
 
 class BuiltInRandomGenerator:
